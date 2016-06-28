@@ -4,6 +4,9 @@ var bodyParser = require('body-parser');
 var app = express();
 var PORT = process.env.PORT || 3000;
 var todos = require('./todos');
+var todoNextId = todos.length;
+
+console.log(todoNextId);
 
 app.use(bodyParser.json());
 
@@ -34,7 +37,11 @@ app.get('/todos/:id', function(req, res) {
 });
 
 app.post('/todos', function (req, res) {
-    
+    var body = req.body;
+    todoNextId++;
+    body.id = todoNextId;
+    todos.push(body);
+    res.json(todos);
 })
 
 app.listen(PORT, function() {
