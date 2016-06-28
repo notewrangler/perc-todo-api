@@ -13,6 +13,11 @@ var todos = [
     id: 3,
     description: 'Send email to Gabe',
     completed: true
+},
+{
+    id: 4,
+    description: 'Get out of Dodge',
+    completed: false
 }
 ];
 

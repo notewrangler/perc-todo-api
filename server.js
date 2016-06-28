@@ -1,7 +1,11 @@
 var express = require('express');
+var bodyParser = require('body-parser');
+
 var app = express();
 var PORT = process.env.PORT || 3000;
 var todos = require('./todos');
+
+app.use(bodyParser.json());
 
 app.get('/', function(req, res) {
     res.send('Todo API Root');
@@ -28,6 +32,10 @@ app.get('/todos/:id', function(req, res) {
     }
     res.send('Asking for todo with id of ' + req.params.id)
 });
+
+app.post('/todos', function (req, res) {
+    
+})
 
 app.listen(PORT, function() {
     console.log('Express listening on port ' + PORT);
