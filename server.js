@@ -33,16 +33,23 @@ app.get('/todos', function(req, res) {
 });
 
 app.get('/todos/:id', function(req, res) {
-
     var todoId = parseInt(req.params.id, 10);
-    var matchItem = _.findWhere(todos, {id: todoId});
+    db.todo.findById(todoId).then(function(todo){
+        if (!!todo) {
+            res.json(todo.toJSON());
+        } else {
+            res.status(404).send();
+        }
+    }, function(e) {
+        res.status(500).send();
+    });
 
-    if (matchItem) {
-        res.json(matchItem);
-    } else {
-        res.status(404).send();
-    }
-    res.send('Asking for todo with id of ' + req.params.id)
+    // if (matchItem) {
+    //     res.json(matchItem);
+    // } else {
+    //     res.status(404).send();
+    // }
+    // res.send('Asking for todo with id of ' + req.params.id)
 });
 
 app.post('/todos', function (req, res) {
@@ -53,7 +60,6 @@ app.post('/todos', function (req, res) {
     }, function(e){
         res.status(400).json(e);
     })
-
     // if(!_.isBoolean(body.completed) || !_.isString(body.description) || body.description.trim().length === 0){
     //     return res.status(400)
     // }
