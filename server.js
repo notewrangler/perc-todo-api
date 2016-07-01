@@ -62,27 +62,26 @@ app.post('/todos', function (req, res) {
     }, function(e){
         res.status(400).json(e);
     })
-    // if(!_.isBoolean(body.completed) || !_.isString(body.description) || body.description.trim().length === 0){
-    //     return res.status(400)
-    // }
-    //
-    // body.description = body.description.trim();
-    //
-    // todoNextId++;
-    // body.id = todoNextId;
-    // todos.push(body);
-    // res.json(todos);
 });
 
 app.delete('/todos/:id', function(req, res) {
     var todoId = parseInt(req.params.id, 10);
-    var matchItem = _.findWhere(todos, {id: todoId});
-    if (matchItem) {
-        todos = _.without(todos, matchItem);
-        res.json(matchItem);
-    } else {
-        res.status(404).json({"error": "No Todo Item found with that ID"});
-    }
+
+    db.todo.destroy({
+        where: {
+            id: todoId
+        }
+    }).then(function(rowsDeleted) {
+        if (rowsDeleted === 0) {
+            res.status(404).json({
+                error: 'No todo with that Id'
+            });
+        } else {
+            res.status(204).send();
+        }
+    }, function() {
+        res.status(500).send();
+    });
 });
 
 app.put('/todos/:id', function (req, res) {
@@ -117,4 +116,4 @@ db.sequelize.sync().then(function(){
     app.listen(PORT, function() {
         console.log('Express listening on port ' + PORT);
     });
-})
+});
